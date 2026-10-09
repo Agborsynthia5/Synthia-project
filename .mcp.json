@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "mcpServers": {
     "angular-cli": {
@@ -6,3 +7,13 @@
     }
   }
 }
+=======
+{
+  "mcpServers": {
+    "angular-cli": {
+      "command": "npx",
+      "args": ["-y", "@angular/cli", "mcp"]
+    }
+  }
+}
+>>>>>>> d728ef09db1f1078b88369726e4aa1a1629e9ee6

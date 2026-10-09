@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "printWidth": 100,
   "singleQuote": true,
@@ -10,3 +11,17 @@
     }
   ]
 }
+=======
+{
+  "printWidth": 100,
+  "singleQuote": true,
+  "overrides": [
+    {
+      "files": "*.html",
+      "options": {
+        "parser": "angular"
+      }
+    }
+  ]
+}
+>>>>>>> d728ef09db1f1078b88369726e4aa1a1629e9ee6
