@@ -1,4 +1,11 @@
-<div>
-    <input [formControl]="newTask" placeholder="Enter a task" />
-    <button (click)= "submitTodo()">Add</button>
-</div>
+<form (ngSubmit)="submitTodo()">
+  <div class="field">
+    <label for="new-task">Task</label>
+    <input id="new-task" [formControl]="newTask" placeholder="Enter a task" required />
+  </div>
+  <div class="field">
+    <label for="new-due-date">Due date (optional)</label>
+    <input id="new-due-date" type="date" [formControl]="newDueDate" />
+  </div>
+  <button type="submit">Add</button>
+</form>

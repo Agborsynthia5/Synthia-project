@@ -1,8 +1,11 @@
 <main class="main">
   <h1>Angular ToDo App</h1>
-  
+
   <app-add-item (newTodo)="addTodo($event)"></app-add-item>
 
-
-  <app-todo-list></app-todo-list>
-  </main>
+  <app-todo-list
+    [todos]="todos"
+    (deleteTodo)="deleteTodo($event)"
+    (updateTodo)="updateTodo($event)"
+  ></app-todo-list>
+</main>

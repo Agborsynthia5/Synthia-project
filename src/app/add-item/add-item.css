@@ -1,17 +1,29 @@
 
-div {
+form {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 8px;
     margin-bottom: 16px;
-    outline: none;
 }
 
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
 
+label {
+    color: #444;
+    font-size: 0.9rem;
+}
 
-
-
-
+input {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font: inherit;
+}
 
 button {
     padding: 8px 16px;
