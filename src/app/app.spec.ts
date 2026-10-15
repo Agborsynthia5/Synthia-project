@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
+import { getMinimumDueDateTime } from './due-date-time';
 import { TodoList } from './todo-list/todo-list';
 
 describe('App', () => {
@@ -20,27 +21,27 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Angular ToDo App');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Make room for');
   });
 
   it('should add, update, and delete todos', () => {
     const app = TestBed.createComponent(App).componentInstance;
 
-    app.addTodo({ title: '  Buy groceries  ', dueDate: '2026-10-20' });
+    app.addTodo({ title: '  Buy groceries  ', dueDate: '2026-10-20T12:00' });
     expect(app.todos).toEqual([
-      { id: 1, title: 'Buy groceries', dueDate: '2026-10-20', completed: false },
+      { id: 1, title: 'Buy groceries', dueDate: '2026-10-20T12:00', completed: false },
     ]);
 
     app.updateTodo({
       ...app.todos[0],
       title: 'Buy food',
-      dueDate: '2026-10-21',
+      dueDate: '2026-10-21T12:00',
       completed: true,
     });
     expect(app.todos[0]).toEqual({
       id: 1,
       title: 'Buy food',
-      dueDate: '2026-10-21',
+      dueDate: '2026-10-21T12:00',
       completed: true,
     });
 
@@ -69,7 +70,8 @@ describe('App', () => {
     input!.value = 'Write tests';
     input!.dispatchEvent(new Event('input', { bubbles: true }));
     const dueDate = compiled.querySelector<HTMLInputElement>('#new-due-date');
-    dueDate!.value = '2026-10-20';
+    dueDate!.value = getMinimumDueDateTime();
+    const submittedDueDate = dueDate!.value;
     dueDate!.dispatchEvent(new Event('input', { bubbles: true }));
 
     const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
@@ -78,15 +80,16 @@ describe('App', () => {
 
     expect(submitEvent.defaultPrevented).toBe(true);
     expect(compiled.querySelector('.task span')?.textContent?.trim()).toBe('Write tests');
-    expect(compiled.querySelector('.due-date')?.textContent?.trim()).toContain('Oct 20, 2026');
+    expect(compiled.querySelector('.due-date')?.getAttribute('datetime')).toBe(submittedDueDate);
+    expect(compiled.querySelector('.due-date')?.textContent).toContain('Due ');
   });
 
   it('should filter the displayed tasks and update the due date', async () => {
     const fixture = TestBed.createComponent(TodoList);
     const list = fixture.componentInstance;
     list.todos = [
-      { id: 1, title: 'Active task', dueDate: '', completed: false },
-      { id: 2, title: 'Finished task', dueDate: '2026-10-20', completed: true },
+      { id: 1, title: 'Active task', dueDate: '2026-10-20T12:00', completed: false },
+      { id: 2, title: 'Finished task', dueDate: '2026-10-20T12:00', completed: true },
     ];
     fixture.detectChanges();
 
@@ -98,13 +101,13 @@ describe('App', () => {
     expect(compiled.textContent).not.toContain('Finished task');
 
     list.beginEdit(list.todos[0]);
-    list.editDueDate.setValue('2026-10-22');
+    list.editDueDate.setValue(getMinimumDueDateTime());
     const updated = vi.spyOn(list.updateTodo, 'emit');
     list.saveEdit(list.todos[0]);
     expect(updated).toHaveBeenCalledWith({
       id: 1,
       title: 'Active task',
-      dueDate: '2026-10-22',
+      dueDate: getMinimumDueDateTime(),
       completed: false,
     });
 

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { getMinimumDueDateTime, isValidDueDateTime } from '../due-date-time';
 import { Todo } from '../todo.model';
 
 @Component({
@@ -18,6 +19,10 @@ export class TodoList {
   editingTodoId: number | null = null;
   editTitle = new FormControl('', { nonNullable: true });
   editDueDate = new FormControl('', { nonNullable: true });
+
+  get minimumDueDateTime(): string {
+    return getMinimumDueDateTime();
+  }
 
   get filteredTodos(): Todo[] {
     if (this.currentView === 'active') {
@@ -45,11 +50,12 @@ export class TodoList {
 
   saveEdit(todo: Todo) {
     const title = this.editTitle.value.trim();
-    if (!title) {
+    const dueDate = this.editDueDate.value;
+    if (!title || !isValidDueDateTime(dueDate)) {
       return;
     }
 
-    this.updateTodo.emit({ ...todo, title, dueDate: this.editDueDate.value });
+    this.updateTodo.emit({ ...todo, title, dueDate });
     this.cancelEdit();
   }
 

@@ -1,39 +1,100 @@
 
+:host {
+    display: block;
+    width: 100%;
+}
+
 form {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 16px;
+    gap: 0.85rem;
+    width: 100%;
+    margin-bottom: 0;
 }
 
 .field {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    flex: 1 1 12rem;
+    min-width: 0;
+    gap: 0.45rem;
 }
 
 label {
-    color: #444;
-    font-size: 0.9rem;
+    color: #53645a;
+    font-size: 0.76rem;
+    font-weight: 650;
 }
 
 input {
-    padding: 8px 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    min-height: 2.9rem;
+    padding: 0.7rem 0.8rem;
+    color: var(--color-ink);
+    background: #fff;
+    border: 1px solid #dfe4d9;
+    border-radius: 0.7rem;
     font: inherit;
+    font-size: 0.88rem;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+input::placeholder {
+    color: #a4ada5;
+}
+
+input:focus {
+    outline: none;
+    border-color: #7da58a;
+    box-shadow: 0 0 0 3px rgb(80 131 98 / 13%);
 }
 
 button {
-    padding: 8px 16px;
-    background-color: #007bff;
+    min-height: 2.9rem;
+    padding: 0.7rem 1.15rem;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 0.7rem;
+    background: var(--color-accent);
     cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
+    font-size: 0.85rem;
+    font-weight: 650;
+    box-shadow: 0 5px 12px rgb(60 113 87 / 17%);
+    transition: background-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
 }
+
 button:hover {
-    background-color: #0056b3;
+    background: var(--color-accent-dark);
+    box-shadow: 0 7px 16px rgb(60 113 87 / 22%);
+    transform: translateY(-1px);
+}
+
+button:focus-visible {
+    outline: 3px solid #9ebf9e;
+    outline-offset: 3px;
+}
+
+.form-error {
+    width: 100%;
+    margin: 0.75rem 0 0;
+    color: #a53b34;
+    font-size: 0.82rem;
+}
+
+@media (max-width: 520px) {
+    form {
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+
+    .field {
+        flex-basis: 100%;
+    }
+
+    form > button {
+        width: 100%;
+    }
 }

@@ -1,11 +1,27 @@
-<form (ngSubmit)="submitTodo()">
+<form (ngSubmit)="submitTodo()" novalidate>
   <div class="field">
     <label for="new-task">Task</label>
-    <input id="new-task" [formControl]="newTask" placeholder="Enter a task" required />
+    <input
+      id="new-task"
+      [formControl]="newTask"
+      placeholder="Enter a task"
+      required
+      (input)="clearError()"
+    />
   </div>
   <div class="field">
-    <label for="new-due-date">Due date (optional)</label>
-    <input id="new-due-date" type="date" [formControl]="newDueDate" />
+    <label for="new-due-date">Due date and time</label>
+    <input
+      id="new-due-date"
+      type="datetime-local"
+      [min]="minimumDueDateTime"
+      [formControl]="newDueDate"
+      required
+      (input)="clearError()"
+    />
   </div>
   <button type="submit">Add</button>
 </form>
+@if (errorMessage) {
+  <p class="form-error" role="alert">{{ errorMessage }}</p>
+}

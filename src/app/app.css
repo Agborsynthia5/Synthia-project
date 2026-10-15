@@ -1,14 +1,215 @@
 :host {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: Arial, sans-serif;
-    padding: 2rem;
-    background-color: #f4f4f4;
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    padding: clamp(1rem, 5vw, 3.5rem) 1rem;
     min-height: 100vh;
+    min-height: 100dvh;
+}
+
+.main {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 44rem;
+    margin: 0 auto;
+}
+
+.hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    box-sizing: border-box;
+    min-height: 17rem;
+    margin-bottom: 1.25rem;
+    padding: clamp(1.5rem, 6vw, 2.75rem);
+    color: #f6f6ed;
+    background:
+        radial-gradient(ellipse at 92% 18%, rgb(111 167 130 / 20%), transparent 34%),
+        linear-gradient(135deg, #173a32 0%, #102a27 55%, #1b3931 100%);
+    border: 1px solid rgb(255 255 255 / 8%);
+    border-radius: 1.5rem;
+    box-shadow: 0 20px 50px rgb(22 48 40 / 12%);
+}
+
+.brand {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 2.5rem;
+    color: #dbe8d7;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+}
+
+.brand-mark {
+    display: grid;
+    width: 1.7rem;
+    height: 1.7rem;
+    place-items: center;
+    color: #173a32;
+    background: #d9e7c7;
+    border-radius: 0.55rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0;
+}
+
+.eyebrow {
+    margin: 0 0 0.55rem;
+    color: var(--color-muted);
+    font-size: 0.67rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+}
+
+.hero .eyebrow {
+    color: #a9c5ad;
+}
+
+h1,
+h2,
+p {
+    margin-top: 0;
 }
 
 h1 {
-    color: #333;
-    margin-bottom: 1rem
+    position: relative;
+    z-index: 1;
+    margin-bottom: 0.75rem;
+    color: var(--color-ink);
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(2.35rem, 8vw, 3.5rem);
+    font-weight: 400;
+    letter-spacing: -0.055em;
+    line-height: 1.02;
+}
+
+.intro {
+    position: relative;
+    z-index: 1;
+    max-width: 25rem;
+    margin-bottom: 1.5rem;
+    color: #c3d0c5;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.task-summary {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.55rem 0.8rem;
+    color: #e2ecdf;
+    background: rgb(255 255 255 / 8%);
+    border: 1px solid rgb(255 255 255 / 10%);
+    border-radius: 999px;
+    font-size: 0.78rem;
+}
+
+.summary-dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    background: #b7d697;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgb(183 214 151 / 14%);
+}
+
+.hero-orbit {
+    position: absolute;
+    z-index: -1;
+    right: -4.2rem;
+    border: 1px solid rgb(196 222 184 / 11%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.orbit-one {
+    top: -7rem;
+    width: 19rem;
+    height: 19rem;
+}
+
+.orbit-two {
+    top: -4rem;
+    right: -1rem;
+    width: 12rem;
+    height: 12rem;
+}
+
+.panel {
+    box-sizing: border-box;
+    width: 100%;
+    padding: clamp(1.1rem, 4vw, 1.65rem);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1.2rem;
+    box-shadow: 0 12px 35px rgb(31 48 39 / 5%);
+}
+
+.capture {
+    margin-bottom: 1.25rem;
+}
+
+.panel-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.15rem;
+}
+
+.panel-heading .eyebrow {
+    margin-bottom: 0.35rem;
+}
+
+h2 {
+    margin-bottom: 0;
+    color: var(--color-ink);
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.45rem;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+}
+
+.step-number {
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    place-items: center;
+    color: #789079;
+    background: #eef2e8;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+app-add-item,
+app-todo-list {
+    display: block;
+    width: 100%;
+}
+
+@media (max-width: 480px) {
+    :host {
+        padding: 1rem 0.75rem;
+    }
+
+    .hero {
+        min-height: auto;
+        border-radius: 1.15rem;
+    }
+
+    .brand {
+        margin-bottom: 2rem;
+    }
+
+    .panel {
+        border-radius: 1rem;
+    }
 }

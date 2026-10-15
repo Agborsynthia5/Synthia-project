@@ -1,4 +1,11 @@
 <section class="todos" aria-label="Todo list">
+  <div class="list-heading">
+    <div>
+      <p class="eyebrow">STAY IN MY FLOW</p>
+      <h2>My tasks</h2>
+    </div>
+    <span class="task-count">{{ activeCount }} active</span>
+  </div>
   <nav class="filters" aria-label="Filter tasks">
     <button type="button" [class.selected]="currentView === 'all'" [attr.aria-pressed]="currentView === 'all'" (click)="currentView = 'all'">All ({{ todos.length }})</button>
     <button type="button" [class.selected]="currentView === 'active'" [attr.aria-pressed]="currentView === 'active'" (click)="currentView = 'active'">Active ({{ activeCount }})</button>
@@ -10,8 +17,14 @@
         <form class="edit-form" (ngSubmit)="saveEdit(todo)">
           <label class="visually-hidden" [for]="'edit-task-' + todo.id">Edit task</label>
           <input [id]="'edit-task-' + todo.id" [formControl]="editTitle" required />
-          <label class="visually-hidden" [for]="'edit-due-date-' + todo.id">Due date</label>
-          <input [id]="'edit-due-date-' + todo.id" type="date" [formControl]="editDueDate" />
+          <label class="visually-hidden" [for]="'edit-due-date-' + todo.id">Due date and time</label>
+          <input
+            [id]="'edit-due-date-' + todo.id"
+            type="datetime-local"
+            [min]="minimumDueDateTime"
+            [formControl]="editDueDate"
+            required
+          />
           <button type="submit">Save</button>
           <button type="button" class="secondary" (click)="cancelEdit()">Cancel</button>
         </form>
@@ -27,7 +40,7 @@
           </label>
           @if (todo.dueDate) {
             <time class="due-date" [attr.datetime]="todo.dueDate">
-              Due {{ todo.dueDate | date:'mediumDate':'UTC' }}
+              Due {{ todo.dueDate | date:'medium' }}
             </time>
           }
         </div>
@@ -39,12 +52,16 @@
     </div>
   } @empty {
     <p class="empty-state">
+      <span class="empty-icon" aria-hidden="true">✳</span>
       @if (todos.length === 0) {
-        No tasks yet. Add a task to get started.
+        <strong>My list is clear.</strong>
+        <span>Add a task above whenever you're ready.</span>
       } @else if (currentView === 'active') {
-        No active tasks.
+        <strong>All caught up.</strong>
+        <span>There are no active tasks right now.</span>
       } @else {
-        No completed tasks.
+        <strong>Nothing here just yet.</strong>
+        <span>Completed tasks will show up here.</span>
       }
     </p>
   }
