@@ -22,6 +22,6 @@
   </div>
   <button type="submit">Add</button>
 </form>
-@if (errorMessage) {
-  <p class="form-error" role="alert">{{ errorMessage }}</p>
+@if (errorMessage()) {
+  <p class="form-error" role="alert">{{ errorMessage() }}</p>
 }

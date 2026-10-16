@@ -13,7 +13,7 @@
   </nav>
   @for (todo of filteredTodos(); track todo.id) {
     <div class="list">
-      @if (editingTodoId === todo.id) {
+      @if (editingTodoId() === todo.id) {
         <form class="edit-form" (ngSubmit)="saveEdit(todo)">
           <label class="visually-hidden" [for]="'edit-task-' + todo.id">Edit task</label>
           <input [id]="'edit-task-' + todo.id" [formControl]="editTitle" required />

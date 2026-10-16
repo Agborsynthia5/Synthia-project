@@ -1,4 +1,4 @@
-import { Component, output } from '@angular/core';
+import { Component, output, signal } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { getMinimumDueDateTime, isValidDueDateTime } from '../due-date-time';
 import { NewTodo } from '../todo.model';
@@ -12,7 +12,7 @@ import { NewTodo } from '../todo.model';
 export class AddItem {
   newTask = new FormControl('', { nonNullable: true });
   newDueDate = new FormControl('', { nonNullable: true });
-  errorMessage = '';
+  errorMessage = signal('');
 
   newTodo = output<NewTodo>();
 
@@ -25,22 +25,22 @@ export class AddItem {
     const dueDate = this.newDueDate.value;
 
     if (!title) {
-      this.errorMessage = 'Enter a task title.';
+      this.errorMessage.set('Enter a task title.');
       return;
     }
 
     if (!isValidDueDateTime(dueDate)) {
-      this.errorMessage = 'Choose a due date and time that is not in the past.';
+      this.errorMessage.set('Choose a due date and time that is not in the past.');
       return;
     }
 
-    this.errorMessage = '';
+    this.errorMessage.set('');
     this.newTodo.emit({ title, dueDate });
     this.newTask.setValue('');
     this.newDueDate.setValue('');
   }
 
   clearError() {
-    this.errorMessage = '';
+    this.errorMessage.set('');
   }
 }

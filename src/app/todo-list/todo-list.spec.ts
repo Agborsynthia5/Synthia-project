@@ -6,6 +6,7 @@ import { TodoList } from './todo-list';
 describe('TodoList', () => {
   let component: TodoList;
   let fixture: ComponentFixture<TodoList>;
+  let todoService: TodoService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -14,6 +15,7 @@ describe('TodoList', () => {
 
     fixture = TestBed.createComponent(TodoList);
     component = fixture.componentInstance;
+    todoService = TestBed.inject(TodoService);
     await fixture.whenStable();
   });
 
@@ -28,8 +30,8 @@ describe('TodoList', () => {
       dueDate: getMinimumDueDateTime(),
       completed: false,
     };
-    component.todoService.todos.set([todo]);
-    const updated = vi.spyOn(component.todoService, 'updateTodo');
+    todoService.todos.set([todo]);
+    const updated = vi.spyOn(todoService, 'updateTodo');
     component.beginEdit(todo);
 
     component.editDueDate.setValue('');
@@ -43,5 +45,20 @@ describe('TodoList', () => {
     component.editDueDate.setValue(getMinimumDueDateTime());
     component.saveEdit(todo);
     expect(updated).toHaveBeenCalledWith(todo);
+  });
+
+  it('tracks the currently edited todo with a signal', () => {
+    const todo = {
+      id: 1,
+      title: 'Plan a trip',
+      dueDate: getMinimumDueDateTime(),
+      completed: false,
+    };
+
+    component.beginEdit(todo);
+    expect(component.editingTodoId()).toBe(todo.id);
+
+    component.cancelEdit();
+    expect(component.editingTodoId()).toBeNull();
   });
 });

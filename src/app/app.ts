@@ -11,5 +11,5 @@ import { TodoList } from './todo-list/todo-list';
 })
 export class App {
   protected readonly title = signal('my-angular-app');
-  readonly todoService = inject(TodoService);
+  protected readonly todoService = inject(TodoService);
 }

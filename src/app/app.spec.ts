@@ -94,7 +94,8 @@ describe('App', () => {
   it('should filter the displayed tasks and update the due date', async () => {
     const fixture = TestBed.createComponent(TodoList);
     const list = fixture.componentInstance;
-    list.todoService.todos.set([
+    const service = TestBed.inject(TodoService);
+    service.todos.set([
       { id: 1, title: 'Active task', dueDate: '2026-10-20T12:00', completed: false },
       { id: 2, title: 'Finished task', dueDate: '2026-10-20T12:00', completed: true },
     ]);
@@ -107,10 +108,10 @@ describe('App', () => {
     expect(compiled.textContent).toContain('Active task');
     expect(compiled.textContent).not.toContain('Finished task');
 
-    list.beginEdit(list.todoService.todos()[0]);
+    list.beginEdit(service.todos()[0]);
     list.editDueDate.setValue(getMinimumDueDateTime());
-    const updated = vi.spyOn(list.todoService, 'updateTodo');
-    list.saveEdit(list.todoService.todos()[0]);
+    const updated = vi.spyOn(service, 'updateTodo');
+    list.saveEdit(service.todos()[0]);
     expect(updated).toHaveBeenCalledWith({
       id: 1,
       title: 'Active task',
@@ -118,7 +119,7 @@ describe('App', () => {
       completed: false,
     });
 
-    const deleted = vi.spyOn(list.todoService, 'deleteTodo');
+    const deleted = vi.spyOn(service, 'deleteTodo');
     list.currentView.set('all');
     fixture.detectChanges();
     const deleteButton = compiled.querySelector<HTMLButtonElement>('.delete');

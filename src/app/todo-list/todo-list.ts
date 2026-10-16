@@ -12,10 +12,10 @@ import { TodoService } from '../todo.service';
   templateUrl: './todo-list.html',
 })
 export class TodoList {
-  readonly todoService = inject(TodoService);
+  protected readonly todoService = inject(TodoService);
 
   currentView = signal<'all' | 'active' | 'completed'>('all');
-  editingTodoId: number | null = null;
+  editingTodoId = signal<number | null>(null);
   editTitle = new FormControl('', { nonNullable: true });
   editDueDate = new FormControl('', { nonNullable: true });
   readonly filteredTodos = computed(() => {
@@ -42,7 +42,7 @@ export class TodoList {
   }
 
   beginEdit(todo: Todo) {
-    this.editingTodoId = todo.id;
+    this.editingTodoId.set(todo.id);
     this.editTitle.setValue(todo.title);
     this.editDueDate.setValue(todo.dueDate);
   }
@@ -59,7 +59,7 @@ export class TodoList {
   }
 
   cancelEdit() {
-    this.editingTodoId = null;
+    this.editingTodoId.set(null);
     this.editTitle.setValue('');
     this.editDueDate.setValue('');
   }
