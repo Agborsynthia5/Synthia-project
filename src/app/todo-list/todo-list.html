@@ -4,6 +4,14 @@
       <p class="eyebrow">STAY IN MY FLOW</p>
       <h2>My tasks</h2>
     </div>
+    <button
+      type="button"
+      class="clear-completed"
+      [disabled]="completedCount() === 0"
+      (click)="todoService.clearCompleted()"
+    >
+      Clear completed
+    </button>
     <span class="task-count">{{ activeCount() }} active</span>
   </div>
   <nav class="filters" aria-label="Filter tasks">
@@ -14,22 +22,36 @@
   @for (todo of filteredTodos(); track todo.id) {
     <div class="list">
       @if (editingTodoId() === todo.id) {
-        <form class="edit-form" (ngSubmit)="saveEdit(todo)">
+        <form
+          class="edit-form"
+          (ngSubmit)="saveEdit(todo)"
+          (keydown.escape)="cancelEdit(todo.id); $event.preventDefault()"
+          novalidate
+        >
           <label class="visually-hidden" [for]="'edit-task-' + todo.id">Edit task</label>
-          <input [id]="'edit-task-' + todo.id" [formControl]="editTitle" required />
+          <input
+            [id]="'edit-task-' + todo.id"
+            [formControl]="editTitle"
+            (input)="clearEditError()"
+            required
+          />
           <label class="visually-hidden" [for]="'edit-due-date-' + todo.id">Due date and time</label>
           <input
             [id]="'edit-due-date-' + todo.id"
             type="datetime-local"
             [min]="minimumDueDateTime"
             [formControl]="editDueDate"
+            (input)="clearEditError()"
             required
           />
           <button type="submit">Save</button>
-          <button type="button" class="secondary" (click)="cancelEdit()">Cancel</button>
+          <button type="button" class="secondary" (click)="cancelEdit(todo.id)">Cancel</button>
+          @if (editErrorMessage()) {
+            <p class="edit-error" role="alert">{{ editErrorMessage() }}</p>
+          }
         </form>
       } @else {
-        <div class="task">
+        <div class="task" [class.overdue]="isOverdue(todo)">
           <label class="task-title">
             <input
               type="checkbox"
@@ -42,11 +64,21 @@
             <time class="due-date" [attr.datetime]="todo.dueDate">
               Due {{ todo.dueDate | date:'medium' }}
             </time>
+            @if (isOverdue(todo)) {
+              <span class="overdue-indicator">Overdue</span>
+            }
           }
         </div>
         <div class="actions">
-          <button type="button" class="secondary" (click)="beginEdit(todo)">Edit</button>
-          <button type="button" class="delete" (click)="todoService.deleteTodo(todo.id)">Delete</button>
+          <button
+            [id]="'edit-button-' + todo.id"
+            type="button"
+            class="secondary"
+            (click)="beginEdit(todo)"
+          >
+            Edit
+          </button>
+          <button type="button" class="delete" (click)="confirmDelete(todo)">Delete</button>
         </div>
       }
     </div>

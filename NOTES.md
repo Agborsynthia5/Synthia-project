@@ -15,15 +15,13 @@ Things that was hard at first was to push to github but with the help of the ess
 And also how to make some changes like due date not optional and add time which i used AI to do.
 
 Ticket checklist completed:
-- [x] Set up the local Angular development environment and initialize a practice project repo.
-- [x] Watch core video modules on Angular CLI, components, and template syntax while coding along.
-- [x]  Complete modules on data binding, directives, and services/dependency injection.
-- [x] Test and debug the practice application to ensure all hands-on examples run cleanly.
-- [x]Document NOTES.md in the repo and commit the practice code to Git.
-- [x]Confirm the app adds, displays, and deletes todos.
-
-- [x]  Confirm the project builds successfully with ng build and no merge conflict markers remain.
-
+- [x ]  On startup, TodoService loads saved todos from localStorage.
+- [x]  Todo changes—adding, editing, completing, or deleting a task—are saved to localStorage; refreshing the page preserves the latest state.
+- [x]  Tasks whose due date and time have passed are visually distinguishable from tasks that are not overdue.
+- [x] Tasks are ordered by due date, soonest first, and the ordering is maintained across the All, Active, and Completed views.
+- [x] A Clear completed button removes all completed tasks at once. It is unavailable or disabled when there are no completed tasks.
+- [x] In edit mode, pressing Escape cancels the edit without saving changes and returns keyboard focus to that task’s Edit button. 
+- [x] Deleting a task is protected by either a confirmation step before deletion or an Undo option after deletion. 
 Project status:
 - Repository: https://github.com/Agborsynthia5/Synthia-project
 - Build check: ng build completed successfully.

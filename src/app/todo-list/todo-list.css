@@ -35,7 +35,8 @@
     letter-spacing: -0.03em;
 }
 
-.task-count {
+.task-count,
+.clear-completed {
     padding: 0.45rem 0.7rem;
     color: #57715d;
     background: #eef2e8;
@@ -43,6 +44,11 @@
     font-size: 0.73rem;
     font-weight: 650;
     white-space: nowrap;
+}
+
+.clear-completed {
+    border: 0;
+    cursor: pointer;
 }
 
 .filters {
@@ -142,6 +148,12 @@
     font-size: 0.76rem;
 }
 
+.overdue-indicator {
+    color: #a53b34;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
 .completed {
     color: #89948a !important;
     text-decoration: line-through;
@@ -163,6 +175,13 @@
 .edit-form {
     flex-wrap: wrap;
     width: 100%;
+}
+
+.edit-error {
+    flex: 1 1 100%;
+    margin: 0;
+    color: #a53b34;
+    font-size: 0.82rem;
 }
 
 .list button {

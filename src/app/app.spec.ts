@@ -123,7 +123,9 @@ describe('App', () => {
     list.currentView.set('all');
     fixture.detectChanges();
     const deleteButton = compiled.querySelector<HTMLButtonElement>('.delete');
+    const confirm = vi.spyOn(window, 'confirm').mockReturnValue(true);
     deleteButton?.click();
     expect(deleted).toHaveBeenCalledWith(1);
+    confirm.mockRestore();
   });
 });
