@@ -1,11 +1,7 @@
 <main class="main">
   <h1>Make room for what matters.</h1>
 
-  <app-add-item (newTodo)="addTodo($event)"></app-add-item>
+  <app-add-item (newTodo)="todoService.addTodo($event)"></app-add-item>
 
-  <app-todo-list
-    [todos]="todos"
-    (deleteTodo)="deleteTodo($event)"
-    (updateTodo)="updateTodo($event)"
-  ></app-todo-list>
+  <app-todo-list></app-todo-list>
 </main>

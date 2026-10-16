@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { getMinimumDueDateTime, isValidDueDateTime } from '../due-date-time';
 import { Todo } from '../todo.model';
+import { TodoService } from '../todo.service';
 
 @Component({
   imports: [DatePipe, FormsModule, ReactiveFormsModule],
@@ -11,35 +12,33 @@ import { Todo } from '../todo.model';
   templateUrl: './todo-list.html',
 })
 export class TodoList {
-  @Input() todos: Todo[] = [];
-  @Output() deleteTodo = new EventEmitter<number>();
-  @Output() updateTodo = new EventEmitter<Todo>();
+  readonly todoService = inject(TodoService);
 
-  currentView: 'all' | 'active' | 'completed' = 'all';
+  currentView = signal<'all' | 'active' | 'completed'>('all');
   editingTodoId: number | null = null;
   editTitle = new FormControl('', { nonNullable: true });
   editDueDate = new FormControl('', { nonNullable: true });
+  readonly filteredTodos = computed(() => {
+    const todos = this.todoService.todos();
+    const currentView = this.currentView();
+
+    if (currentView === 'active') {
+      return todos.filter((todo) => !todo.completed);
+    }
+    if (currentView === 'completed') {
+      return todos.filter((todo) => todo.completed);
+    }
+    return todos;
+  });
+  readonly completedCount = computed(
+    () => this.todoService.todos().filter((todo) => todo.completed).length,
+  );
+  readonly activeCount = computed(
+    () => this.todoService.todos().length - this.completedCount(),
+  );
 
   get minimumDueDateTime(): string {
     return getMinimumDueDateTime();
-  }
-
-  get filteredTodos(): Todo[] {
-    if (this.currentView === 'active') {
-      return this.todos.filter((todo) => !todo.completed);
-    }
-    if (this.currentView === 'completed') {
-      return this.todos.filter((todo) => todo.completed);
-    }
-    return this.todos;
-  }
-
-  get completedCount(): number {
-    return this.todos.filter((todo) => todo.completed).length;
-  }
-
-  get activeCount(): number {
-    return this.todos.length - this.completedCount;
   }
 
   beginEdit(todo: Todo) {
@@ -55,7 +54,7 @@ export class TodoList {
       return;
     }
 
-    this.updateTodo.emit({ ...todo, title, dueDate });
+    this.todoService.updateTodo({ ...todo, title, dueDate });
     this.cancelEdit();
   }
 
@@ -66,6 +65,6 @@ export class TodoList {
   }
 
   toggleCompleted(todo: Todo) {
-    this.updateTodo.emit({ ...todo, completed: !todo.completed });
+    this.todoService.updateTodo({ ...todo, completed: !todo.completed });
   }
 }

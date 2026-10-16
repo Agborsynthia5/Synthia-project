@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, output } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { getMinimumDueDateTime, isValidDueDateTime } from '../due-date-time';
 import { NewTodo } from '../todo.model';
@@ -14,7 +14,7 @@ export class AddItem {
   newDueDate = new FormControl('', { nonNullable: true });
   errorMessage = '';
 
-  @Output() newTodo = new EventEmitter<NewTodo>();
+  newTodo = output<NewTodo>();
 
   get minimumDueDateTime(): string {
     return getMinimumDueDateTime();

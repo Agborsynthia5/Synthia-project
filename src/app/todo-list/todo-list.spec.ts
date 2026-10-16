@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { getMinimumDueDateTime } from '../due-date-time';
+import { TodoService } from '../todo.service';
 import { TodoList } from './todo-list';
 
 describe('TodoList', () => {
@@ -27,19 +28,20 @@ describe('TodoList', () => {
       dueDate: getMinimumDueDateTime(),
       completed: false,
     };
-    const emitted = vi.spyOn(component.updateTodo, 'emit');
+    component.todoService.todos.set([todo]);
+    const updated = vi.spyOn(component.todoService, 'updateTodo');
     component.beginEdit(todo);
 
     component.editDueDate.setValue('');
     component.saveEdit(todo);
-    expect(emitted).not.toHaveBeenCalled();
+    expect(updated).not.toHaveBeenCalled();
 
     component.editDueDate.setValue('2000-01-01T12:00');
     component.saveEdit(todo);
-    expect(emitted).not.toHaveBeenCalled();
+    expect(updated).not.toHaveBeenCalled();
 
     component.editDueDate.setValue(getMinimumDueDateTime());
     component.saveEdit(todo);
-    expect(emitted).toHaveBeenCalledWith(todo);
+    expect(updated).toHaveBeenCalledWith(todo);
   });
 });

@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
 import { getMinimumDueDateTime } from './due-date-time';
+import { TodoService } from './todo.service';
 import { TodoList } from './todo-list/todo-list';
 
 describe('App', () => {
@@ -25,35 +26,35 @@ describe('App', () => {
   });
 
   it('should add, update, and delete todos', () => {
-    const app = TestBed.createComponent(App).componentInstance;
+    const service = TestBed.inject(TodoService);
 
-    app.addTodo({ title: '  Buy groceries  ', dueDate: '2026-10-20T12:00' });
-    expect(app.todos).toEqual([
+    service.addTodo({ title: '  Buy groceries  ', dueDate: '2026-10-20T12:00' });
+    expect(service.todos()).toEqual([
       { id: 1, title: 'Buy groceries', dueDate: '2026-10-20T12:00', completed: false },
     ]);
 
-    app.updateTodo({
-      ...app.todos[0],
+    service.updateTodo({
+      ...service.todos()[0],
       title: 'Buy food',
       dueDate: '2026-10-21T12:00',
       completed: true,
     });
-    expect(app.todos[0]).toEqual({
+    expect(service.todos()[0]).toEqual({
       id: 1,
       title: 'Buy food',
       dueDate: '2026-10-21T12:00',
       completed: true,
     });
 
-    app.deleteTodo(1);
-    expect(app.todos).toEqual([]);
+    service.deleteTodo(1);
+    expect(service.todos()).toEqual([]);
   });
 
   it('should ignore empty todos', () => {
-    const app = TestBed.createComponent(App).componentInstance;
+    const service = TestBed.inject(TodoService);
 
-    app.addTodo({ title: '   ', dueDate: '' });
-    expect(app.todos).toEqual([]);
+    service.addTodo({ title: '   ', dueDate: '' });
+    expect(service.todos()).toEqual([]);
   });
 
   it('should create a task from the form without submitting the browser page', async () => {
@@ -79,6 +80,12 @@ describe('App', () => {
     fixture.detectChanges();
 
     expect(submitEvent.defaultPrevented).toBe(true);
+    expect(TestBed.inject(TodoService).todos()).toContainEqual({
+      id: 1,
+      title: 'Write tests',
+      dueDate: submittedDueDate,
+      completed: false,
+    });
     expect(compiled.querySelector('.task span')?.textContent?.trim()).toBe('Write tests');
     expect(compiled.querySelector('.due-date')?.getAttribute('datetime')).toBe(submittedDueDate);
     expect(compiled.querySelector('.due-date')?.textContent).toContain('Due ');
@@ -87,10 +94,10 @@ describe('App', () => {
   it('should filter the displayed tasks and update the due date', async () => {
     const fixture = TestBed.createComponent(TodoList);
     const list = fixture.componentInstance;
-    list.todos = [
+    list.todoService.todos.set([
       { id: 1, title: 'Active task', dueDate: '2026-10-20T12:00', completed: false },
       { id: 2, title: 'Finished task', dueDate: '2026-10-20T12:00', completed: true },
-    ];
+    ]);
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
@@ -100,10 +107,10 @@ describe('App', () => {
     expect(compiled.textContent).toContain('Active task');
     expect(compiled.textContent).not.toContain('Finished task');
 
-    list.beginEdit(list.todos[0]);
+    list.beginEdit(list.todoService.todos()[0]);
     list.editDueDate.setValue(getMinimumDueDateTime());
-    const updated = vi.spyOn(list.updateTodo, 'emit');
-    list.saveEdit(list.todos[0]);
+    const updated = vi.spyOn(list.todoService, 'updateTodo');
+    list.saveEdit(list.todoService.todos()[0]);
     expect(updated).toHaveBeenCalledWith({
       id: 1,
       title: 'Active task',
@@ -111,8 +118,8 @@ describe('App', () => {
       completed: false,
     });
 
-    const deleted = vi.spyOn(list.deleteTodo, 'emit');
-    list.currentView = 'all';
+    const deleted = vi.spyOn(list.todoService, 'deleteTodo');
+    list.currentView.set('all');
     fixture.detectChanges();
     const deleteButton = compiled.querySelector<HTMLButtonElement>('.delete');
     deleteButton?.click();

@@ -4,14 +4,14 @@
       <p class="eyebrow">STAY IN MY FLOW</p>
       <h2>My tasks</h2>
     </div>
-    <span class="task-count">{{ activeCount }} active</span>
+    <span class="task-count">{{ activeCount() }} active</span>
   </div>
   <nav class="filters" aria-label="Filter tasks">
-    <button type="button" [class.selected]="currentView === 'all'" [attr.aria-pressed]="currentView === 'all'" (click)="currentView = 'all'">All ({{ todos.length }})</button>
-    <button type="button" [class.selected]="currentView === 'active'" [attr.aria-pressed]="currentView === 'active'" (click)="currentView = 'active'">Active ({{ activeCount }})</button>
-    <button type="button" [class.selected]="currentView === 'completed'" [attr.aria-pressed]="currentView === 'completed'" (click)="currentView = 'completed'">Completed ({{ completedCount }})</button>
+    <button type="button" [class.selected]="currentView() === 'all'" [attr.aria-pressed]="currentView() === 'all'" (click)="currentView.set('all')">All ({{ todoService.todos().length }})</button>
+    <button type="button" [class.selected]="currentView() === 'active'" [attr.aria-pressed]="currentView() === 'active'" (click)="currentView.set('active')">Active ({{ activeCount() }})</button>
+    <button type="button" [class.selected]="currentView() === 'completed'" [attr.aria-pressed]="currentView() === 'completed'" (click)="currentView.set('completed')">Completed ({{ completedCount() }})</button>
   </nav>
-  @for (todo of filteredTodos; track todo.id) {
+  @for (todo of filteredTodos(); track todo.id) {
     <div class="list">
       @if (editingTodoId === todo.id) {
         <form class="edit-form" (ngSubmit)="saveEdit(todo)">
@@ -46,17 +46,17 @@
         </div>
         <div class="actions">
           <button type="button" class="secondary" (click)="beginEdit(todo)">Edit</button>
-          <button type="button" class="delete" (click)="deleteTodo.emit(todo.id)">Delete</button>
+          <button type="button" class="delete" (click)="todoService.deleteTodo(todo.id)">Delete</button>
         </div>
       }
     </div>
   } @empty {
     <p class="empty-state">
       <span class="empty-icon" aria-hidden="true">✳</span>
-      @if (todos.length === 0) {
+      @if (todoService.todos().length === 0) {
         <strong>My list is clear.</strong>
         <span>Add a task above whenever you're ready.</span>
-      } @else if (currentView === 'active') {
+      } @else if (currentView() === 'active') {
         <strong>All caught up.</strong>
         <span>There are no active tasks right now.</span>
       } @else {
