@@ -68,6 +68,31 @@ describe('TodoList', () => {
     expect(component.editingTodoId()).toBeNull();
   });
 
+  it('prevents completed todos from entering or saving edit mode', () => {
+    const completedTodo = {
+      id: 7,
+      title: 'Finished task',
+      dueDate: getMinimumDueDateTime(),
+      completed: true,
+    };
+    todoService.todos.set([completedTodo]);
+    fixture.detectChanges();
+
+    const host = fixture.nativeElement as HTMLElement;
+    expect(host.querySelector('#edit-button-7')).toBeNull();
+
+    component.beginEdit(completedTodo);
+    expect(component.editingTodoId()).toBeNull();
+
+    const updated = vi.spyOn(todoService, 'updateTodo');
+    component.editingTodoId.set(completedTodo.id);
+    component.editTitle.setValue('Changed finished task');
+    component.saveEdit(completedTodo);
+
+    expect(updated).not.toHaveBeenCalled();
+    expect(component.editingTodoId()).toBeNull();
+  });
+
   it('shows an error in the edit form when a new due date is in the past', () => {
     const todo = {
       id: 1,

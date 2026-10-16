@@ -21,7 +21,7 @@
   </nav>
   @for (todo of filteredTodos(); track todo.id) {
     <div class="list">
-      @if (editingTodoId() === todo.id) {
+      @if (editingTodoId() === todo.id && !todo.completed) {
         <form
           class="edit-form"
           (ngSubmit)="saveEdit(todo)"
@@ -70,14 +70,16 @@
           }
         </div>
         <div class="actions">
-          <button
-            [id]="'edit-button-' + todo.id"
-            type="button"
-            class="secondary"
-            (click)="beginEdit(todo)"
-          >
-            Edit
-          </button>
+          @if (!todo.completed) {
+            <button
+              [id]="'edit-button-' + todo.id"
+              type="button"
+              class="secondary"
+              (click)="beginEdit(todo)"
+            >
+              Edit
+            </button>
+          }
           <button type="button" class="delete" (click)="confirmDelete(todo)">Delete</button>
         </div>
       }

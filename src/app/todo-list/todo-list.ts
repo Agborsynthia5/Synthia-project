@@ -62,6 +62,10 @@ export class TodoList {
   }
 
   beginEdit(todo: Todo) {
+    if (todo.completed) {
+      return;
+    }
+
     this.editingTodoId.set(todo.id);
     this.editErrorMessage.set('');
     this.editTitle.setValue(todo.title);
@@ -69,6 +73,11 @@ export class TodoList {
   }
 
   saveEdit(todo: Todo) {
+    if (todo.completed) {
+      this.cancelEdit();
+      return;
+    }
+
     const title = this.editTitle.value.trim();
     const dueDate = this.editDueDate.value;
     if (!title) {
